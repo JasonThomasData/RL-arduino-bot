@@ -17,7 +17,6 @@
  * Alternatively, you might use a button to give it a negative reward. 
  */
 
-/*
 struct RewardsForActionsAfterObservingAState
 {
     int ff; //forward forward
@@ -236,21 +235,4 @@ void loop()
     RewardsForActionsAfterObservingAState rewardsForActionsAfterObservingAState = RecallRewardsForActionsAfterObservingAState(state);
     Action nextAction = DecideNextAction(rewardsForActionsAfterObservingAState);    
 }
-*/
-
-#include <Servo.h> 
-
-Servo myservo;
-
-void setup() 
-{ 
-  myservo.attach(9);
-  myservo.write(1200);  // set servo to mid-point
-  Serial.begin(9600);
-} 
-
-void loop()
-{
-  Serial.print(10);
-} 
 
