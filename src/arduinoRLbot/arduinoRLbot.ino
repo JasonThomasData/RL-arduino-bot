@@ -17,6 +17,7 @@
  * Alternatively, you might use a button to give it a negative reward. 
  */
 
+/*
 struct RewardsForActionsAfterObservingAState
 {
     int ff; //forward forward
@@ -206,7 +207,7 @@ Action DecideNextAction(RewardsForActionsAfterObservingAState rewardsForActionsA
     return nextAction;
 }
 
-void ReverseRecentStateActionPairs(LinkedList<StateActionPair> mostRecentStateActionPairs)
+void ReverseRecentStateActionPairsAndApplyNegativeRewards(LinkedList<StateActionPair> mostRecentStateActionPairs)
 {
     while(true)
     {
@@ -216,7 +217,7 @@ void ReverseRecentStateActionPairs(LinkedList<StateActionPair> mostRecentStateAc
         }
         StateActionPair recentStateActionPair = mostRecentStateActionPairs.pop();
         //ReverseAction(recentStateActionPair.Action);
-        //NegativeRewardForStateActionPair(
+        //NegativeRewardForStateActionPair(recentStateActionPair);
     }
 }
 
@@ -226,17 +227,30 @@ void loop()
     bool hasObservedRed = CheckHasObservedRed(state);
     if(hasObservedRed)
     {
-        StateActionPair recentStateActionPair = mostRecentStateActionPairs.pop();
-        //reverse state-action pairs
-        //negative reinforce each of those
-        return; //loop() called next moment
+        ReverseRecentStateActionPairsAndApplyNegativeRewards(mostRecentStateActionPairs);
     }
     else
     {
         //mark the last move added to the move stack as positive
     }
     RewardsForActionsAfterObservingAState rewardsForActionsAfterObservingAState = RecallRewardsForActionsAfterObservingAState(state);
-    Action nextAction = DecideNextAction(rewardsForActionsAfterObservingAState);
-    
+    Action nextAction = DecideNextAction(rewardsForActionsAfterObservingAState);    
 }
+*/
+
+#include <Servo.h> 
+
+Servo myservo;
+
+void setup() 
+{ 
+  myservo.attach(9);
+  myservo.write(1200);  // set servo to mid-point
+  Serial.begin(9600);
+} 
+
+void loop()
+{
+  Serial.print(10);
+} 
 
