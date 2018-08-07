@@ -68,24 +68,34 @@ struct ServoInstructions
     int signalToSet;
 };
 
+//This belongs with the other IO stuff, probably in a separate file. Learn how to use function pointers for callbacks.
+
+
 char CategoriseFrequencyTrio(
     int redFrequency,
     int greenFrequency,
     int blueFrequency)
 {
-    if (redFrequency < 30,
-        greenFrequency < 30,
+    if (redFrequency < 30 &&
+        greenFrequency < 30 &&
         blueFrequency < 30)
     {
         return 'b';
     }
-    else if (redFrequency < 30,
-        greenFrequency > 150,
+    else if (redFrequency < 30 &&
+        greenFrequency > 150 &&
         blueFrequency > 150)
     {
         return 'r';
     }
     return 'w';
+}
+
+int GetFrequency(Sensor sensor, bool s2_signal, bool s3_signal)
+{
+    digitalWrite(sensor.s2Pin, s2_signal);
+    digitalWrite(sensor.s3Pin, s3_signal);
+    return pulseIn(sensor.outputPin, LOW);
 }
 
 char GetColour(Sensor sensor)
@@ -196,13 +206,6 @@ void ConfigureSensor(Sensor *sensor)
     pinMode(sensor->outputPin, INPUT);
     digitalWrite(sensor->s0Pin, HIGH);
     digitalWrite(sensor->s1Pin, LOW);
-}
-
-int GetFrequency(Sensor sensor, bool s2_signal, bool s3_signal)
-{
-    digitalWrite(sensor.s2Pin, s2_signal);
-    digitalWrite(sensor.s3Pin, s3_signal);
-    return pulseIn(sensor.outputPin, LOW);
 }
 
 void setup()
