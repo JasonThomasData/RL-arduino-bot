@@ -47,9 +47,18 @@ void GivenState_wbw_Then_HashObservedRed_False()
     assert(CheckHasObservedRed(state) == false);
 }
 
+void GivenAllFrequenciesAre0_WhenGetColour_ThenReturns_b()
+{
+    //Relies on pulseIn mocked to return 0
+    Sensor sensor;
+    assert(GetColour(sensor) == 'b');
+}
+
 int main()
 {
     GivenFrequenciesProvided_Then_ResultsAsExpected();
     GivenState_rwb_Then_HashObservedRed_True();
     GivenState_wbw_Then_HashObservedRed_False();
+    GivenAllFrequenciesAre0_WhenGetColour_ThenReturns_b();
+    std::cout<< "Seems to work"<< std::endl;
 }
