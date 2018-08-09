@@ -20,4 +20,7 @@ These parts in `3d_designs/reused_parts/` were incorporated from other projects:
     small_wheel.stl -> https://github.com/davidhrbaty/ArduBot
     small_wheel_holder.stl -> https://github.com/davidhrbaty/ArduBot
     SG90-A5.stl -> https://www.thingiverse.com/thing:2282898
-    
+
+### Reading
+
+Naming things is hard, so I've reused common names for components by reading [this](http://www-anw.cs.umass.edu/rlr/terms.html).
