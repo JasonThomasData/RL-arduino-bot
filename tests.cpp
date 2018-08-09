@@ -1,19 +1,28 @@
-//Mock methods
+//Mock Arduino IO 
 void mockPinMode(int pin, int direction) { }
 void mockDigitalWrite(int pin, bool frequency) { }
 int mockPulseIn(int pin, bool frequency) { return 0; }
+
 #define pinMode mockPinMode
 #define digitalWrite mockDigitalWrite
 #define pulseIn mockPulseIn
 
-//Mock types
+#include <iostream>
+
 #define String std::string
 #define OUTPUT 0
 #define INPUT 1
 #define HIGH true
 #define LOW false
 
-#include <iostream>
+#include "src/arduinoRLbot/typeDefs.h"
+#include "src/arduinoRLbot/config.ino"
+#include "src/arduinoRLbot/IO.ino"
+#include "src/arduinoRLbot/methods.ino"
+
+//char mockGetColour(Object sensor) { return 'b'; }
+//#define GetColour mockGetColour
+
 #include "src/arduinoRLbot/arduinoRLbot.ino"
 
 void GivenFrequenciesProvided_Then_ResultsAsExpected()
