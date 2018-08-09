@@ -1,6 +1,6 @@
-#include "typeDefs.h"
+#include "Models.h"
 
-void ConfigureSensor(Sensor *sensor)
+void ConfigureSensor(SensorModel *sensor)
 {
     pinMode(sensor->s0Pin, OUTPUT);
     pinMode(sensor->s1Pin, OUTPUT);
@@ -11,7 +11,7 @@ void ConfigureSensor(Sensor *sensor)
     digitalWrite(sensor->s1Pin, LOW);
 }
 
-int GetFrequency(Sensor sensor, bool s2_signal, bool s3_signal)
+int GetFrequency(SensorModel sensor, bool s2_signal, bool s3_signal)
 {
     digitalWrite(sensor.s2Pin, s2_signal);
     digitalWrite(sensor.s3Pin, s3_signal);

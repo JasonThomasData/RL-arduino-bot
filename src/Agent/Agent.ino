@@ -1,12 +1,12 @@
 #include "LinkedList.h"
-#include "typeDefs.h"
 #include "StateActionPairs.h"
 #include "Rewards.h"
+#include "Models.h"
 
 /*
  * In this reinforcement learning scenario, the software agent will: 
  *    a) make an observation of the environment state, or of the robot's state in the environment
- *    b) if that state is a fail, and if it is, pop back through list of state-action pairs and give negative rewards. Go back to a)
+ *    b) if that state is a fail then pop back through list of state-action pairs and give negative rewards. Go back to a)
  *    c) else, give a positive reward for the last state-action pair in list
  *    d) check to see which action has the best reward for the observed state previously
  *    e) complete that action
@@ -16,7 +16,7 @@
  * It would be preferable to use a HashMap, but, the limitations of an Arduino mean using a fixed length array is more achieveable. However, this means extra care must be paid to naming things, so noone gets confused.
  * Also it would be great to write a minimal unit test suite.
  * 
- * To mitigate against the robot just learning to go backwards and forwards, the robot should detect if it moves a total of zero revs in 10 turns, if so, negative rewards for recorded moves
+ * To mitigate against the robot just learning to go backwards and forwards, the robot should have a heuristic - detect if it moves a total of zero revs in 10 turns, if so, negative rewards for recorded moves
  * Alternatively, you might use a button to give it a negative reward. 
  */
 
@@ -24,9 +24,9 @@ MemoryOfRewardsForStateActionPairs memoryOfRewardsForStateActionPairs;
 
 LinkedList<StateActionPair> mostRecentStateActionPairs;
 
-Sensor sensorLeft;
-Sensor sensorMiddle;
-Sensor sensorRight;
+SensorModel sensorLeft;
+SensorModel sensorMiddle;
+SensorModel sensorRight;
 
 void setup()
 {   

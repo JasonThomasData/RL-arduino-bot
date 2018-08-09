@@ -1,6 +1,6 @@
-#ifndef Sensor_h
-#define Sensor_h
-struct Sensor
+#ifndef SensorModel_h
+#define SensorModel_h
+struct SensorModel
 {
     int s0Pin;
     int s1Pin;
@@ -10,9 +10,9 @@ struct Sensor
 };
 #endif
 
-#ifndef ServoInstructions_h
-#define ServoInstructions_h
-struct ServoInstructions
+#ifndef ServoModel_h
+#define ServoModel_h
+struct ServoModel
 {
     int signalPin;
     int signalToSet;

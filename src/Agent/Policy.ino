@@ -1,5 +1,5 @@
 #include "LinkedList.h"
-#include "typeDefs.h"
+#include "Models.h"
 
 char CategoriseFrequencyTrio(
     int redFrequency,
@@ -21,7 +21,7 @@ char CategoriseFrequencyTrio(
     return 'w';
 }
 
-char GetColour(Sensor sensor)
+char GetColour(SensorModel sensor)
 {
     int redFrequency = GetFrequency(sensor, false, false); //LOW, LOW
     int greenFrequency = GetFrequency(sensor, true, true); //HIGH, HIGH
@@ -30,9 +30,9 @@ char GetColour(Sensor sensor)
 }
 
 State ObserveState(
-    Sensor sensorLeft,
-    Sensor sensorMiddle,
-    Sensor sensorRight)
+    SensorModel sensorLeft,
+    SensorModel sensorMiddle,
+    SensorModel sensorRight)
 {
     State state;
     state.sensorLeft = GetColour(sensorLeft);
