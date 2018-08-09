@@ -60,6 +60,6 @@ void loop()
         //mark the last move added to the move stack as positive
     }
     RewardsForActionsAfterObservingAState rewardsForActionsAfterObservingAState = RecallRewardsForActionsAfterObservingAState(state, memoryOfRewardsForStateActionPairs);
-    Action nextAction = DecideNextAction(rewardsForActionsAfterObservingAState);    
+    Action nextAction = DecideNextAction(rewardsForActionsAfterObservingAState);
 }
 

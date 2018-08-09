@@ -16,7 +16,6 @@ int mockPulseIn(int pin, bool frequency) { return 0; }
 #define LOW false
 
 #include "src/arduinoRLbot/typeDefs.h"
-#include "src/arduinoRLbot/config.ino"
 #include "src/arduinoRLbot/IO.ino"
 #include "src/arduinoRLbot/methods.ino"
 
