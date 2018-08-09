@@ -1,5 +1,7 @@
 #include "LinkedList.h"
 #include "typeDefs.h"
+#include "StateActionPairs.h"
+#include "Rewards.h"
 
 /*
  * In this reinforcement learning scenario, the software agent will: 

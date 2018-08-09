@@ -10,11 +10,14 @@ int mockPulseIn(int pin, bool frequency) { return 0; }
 #include <iostream>
 
 #define String std::string
+
 #define OUTPUT 0
 #define INPUT 1
 #define HIGH true
 #define LOW false
 
+#include "src/arduinoRLbot/StateActionPairs.h"
+#include "src/arduinoRLbot/Rewards.h"
 #include "src/arduinoRLbot/typeDefs.h"
 #include "src/arduinoRLbot/IO.ino"
 #include "src/arduinoRLbot/methods.ino"
