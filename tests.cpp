@@ -16,16 +16,12 @@ int mockPulseIn(int pin, bool frequency) { return 0; }
 #define HIGH true
 #define LOW false
 
-#include "src/arduinoRLbot/StateActionPairs.h"
-#include "src/arduinoRLbot/Rewards.h"
-#include "src/arduinoRLbot/typeDefs.h"
-#include "src/arduinoRLbot/IO.ino"
-#include "src/arduinoRLbot/methods.ino"
-
-//char mockGetColour(Object sensor) { return 'b'; }
-//#define GetColour mockGetColour
-
-#include "src/arduinoRLbot/arduinoRLbot.ino"
+#include "src/Agent/StateActionPairs.h"
+#include "src/Agent/Rewards.h"
+#include "src/Agent/Models.h"
+#include "src/Agent/IO.ino"
+#include "src/Agent/Policy.ino"
+#include "src/Agent/Agent.ino"
 
 void GivenFrequenciesProvided_Then_ResultsAsExpected()
 {
@@ -61,7 +57,7 @@ void GivenState_wbw_Then_HashObservedRed_False()
 void GivenAllFrequenciesAre0_WhenGetColour_ThenReturns_b()
 {
     //Relies on pulseIn mocked to return 0
-    Sensor sensor;
+    SensorModel sensor;
     assert(GetColour(sensor) == 'b');
 }
 
