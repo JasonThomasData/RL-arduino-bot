@@ -1,29 +1,18 @@
 //Mock Arduino IO 
-void mockPinMode(int pin, int direction) { }
-void mockDigitalWrite(int pin, bool frequency) { }
-int mockPulseIn(int pin, bool frequency) { return 0; }
 
-#define pinMode mockPinMode
-#define digitalWrite mockDigitalWrite
-#define pulseIn mockPulseIn
+#include "src/Agent/Models.h"
+
+int mockGetFrequency(SensorModel sensor, bool s2_signal, bool s3_signal) { return 0; }
+#define GetFrequency mockGetFrequency
 
 #include <iostream>
-
-#define String std::string
-
-#define OUTPUT 0
-#define INPUT 1
-#define HIGH true
-#define LOW false
+#define String std::string //C++ has no String type
 
 #include "src/Agent/StateActionPairs.h"
 #include "src/Agent/Rewards.h"
-#include "src/Agent/Models.h"
-#include "src/Agent/IO.ino"
 #include "src/Agent/Policy.ino"
-#include "src/Agent/Agent.ino"
 
-void GivenFrequenciesProvided_Then_ResultsAsExpected()
+void GivenFrequenciesProvided_WhenCategoriseFrequencyTrio_ThenResultsAsExpected()
 {
     assert(CategoriseFrequencyTrio(0, 0, 0) == 'b');
     assert(CategoriseFrequencyTrio(29, 29, 29) == 'b');
@@ -36,7 +25,7 @@ void GivenFrequenciesProvided_Then_ResultsAsExpected()
     assert(CategoriseFrequencyTrio(29, 29, 30) == 'w');
 }
 
-void GivenState_rwb_Then_HashObservedRed_True()
+void GivenState_rwb_WhenCheckHasObservedRed_ThenReturns_True()
 {
     State state;
     state.sensorLeft = 'r';
@@ -45,7 +34,7 @@ void GivenState_rwb_Then_HashObservedRed_True()
     assert(CheckHasObservedRed(state) == true);
 }
 
-void GivenState_wbw_Then_HashObservedRed_False()
+void GivenState_wbw_WhenCheckHasObservedRed_ThenReturns_False()
 {
     State state;
     state.sensorLeft = 'w';
@@ -61,11 +50,74 @@ void GivenAllFrequenciesAre0_WhenGetColour_ThenReturns_b()
     assert(GetColour(sensor) == 'b');
 }
 
+void GivenState_bbb_WhenObserveState_ThenReturnsExpectedState()
+{
+    SensorModel sensor;
+    State state = ObserveState(sensor, sensor, sensor);
+
+    assert(state.sensorLeft == 'b');
+    assert(state.sensorMiddle == 'b');
+    assert(state.sensorRight == 'b');
+    assert(state.memoryKey[0] == 'b');
+    assert(state.memoryKey[1] == 'b');
+    assert(state.memoryKey[2] == 'b');
+}
+
+void GivenState_wbb_WhenRecallRewardsForActionsAfterObservingAState_ThenReturnsExpectedRewards()
+{
+    //Arrange
+    State state;
+    state.sensorLeft = 'w';
+    state.sensorMiddle = 'b';
+    state.sensorRight = 'b';
+    state.memoryKey[0] = 'w';
+    state.memoryKey[1] = 'b';
+    state.memoryKey[2] = 'b';
+
+    MemoryOfRewardsForStateActionPairs memoryOfRewardsForStateActionPairs;
+    memoryOfRewardsForStateActionPairs = {
+        { "www", "wwb", "wbw", "wbb", "bww", "bwb", "bbw", "bbb" },
+        { { 1, 2, 3, 4 }, { 0, 1, 2, 3 }, { -1, 0, 1, 2 }, { -2, -1, 0, 1 }, { -3, -2, -1, 0 }, { -4, -3, -2, -1 }, { -5, -4, -3, -2 }, { -6, -5, -4, -3 } }
+    };
+
+    RewardsForActionsAfterObservingAState expectedRewardsForActionsAfterObservingAState;
+    expectedRewardsForActionsAfterObservingAState = memoryOfRewardsForStateActionPairs.value[3];
+
+    //Act
+    RewardsForActionsAfterObservingAState rewardsForActionsAfterObservingAState;
+    rewardsForActionsAfterObservingAState = RecallRewardsForActionsAfterObservingAState(state, memoryOfRewardsForStateActionPairs);
+
+    //Assert
+    assert(rewardsForActionsAfterObservingAState.ff == expectedRewardsForActionsAfterObservingAState.ff);
+    assert(rewardsForActionsAfterObservingAState.fb == expectedRewardsForActionsAfterObservingAState.fb);
+    assert(rewardsForActionsAfterObservingAState.bf == expectedRewardsForActionsAfterObservingAState.bf);
+    assert(rewardsForActionsAfterObservingAState.bb == expectedRewardsForActionsAfterObservingAState.bb);
+}
+
+void GivenRewards_0_5_10_minus10_WhenDecideNextAction_ThenReturns_1700_1700()
+{
+    //Arrange
+    RewardsForActionsAfterObservingAState rewardsForActionsAfterObservingAState;
+    rewardsForActionsAfterObservingAState = { 0, -5, 10, 7 };
+
+    Action expectedAction = { 1700, 1700 };
+
+    //Act
+    Action action = DecideNextAction(rewardsForActionsAfterObservingAState);
+    
+    //Assert
+    assert(action.leftWheelDirection == expectedAction.leftWheelDirection);
+    assert(action.rightWheelDirection == expectedAction.rightWheelDirection);
+}
+
 int main()
 {
-    GivenFrequenciesProvided_Then_ResultsAsExpected();
-    GivenState_rwb_Then_HashObservedRed_True();
-    GivenState_wbw_Then_HashObservedRed_False();
+    GivenFrequenciesProvided_WhenCategoriseFrequencyTrio_ThenResultsAsExpected();
+    GivenState_rwb_WhenCheckHasObservedRed_ThenReturns_True();
+    GivenState_wbw_WhenCheckHasObservedRed_ThenReturns_False();
     GivenAllFrequenciesAre0_WhenGetColour_ThenReturns_b();
+    GivenState_bbb_WhenObserveState_ThenReturnsExpectedState();
+    GivenState_wbb_WhenRecallRewardsForActionsAfterObservingAState_ThenReturnsExpectedRewards();
+    GivenRewards_0_5_10_minus10_WhenDecideNextAction_ThenReturns_1700_1700();
     std::cout<< "Seems to work"<< std::endl;
 }
