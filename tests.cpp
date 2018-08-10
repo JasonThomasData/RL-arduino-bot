@@ -1,5 +1,3 @@
-//Mock Arduino IO 
-
 #include "src/Agent/Models.h"
 
 int mockGetFrequency(SensorModel sensor, bool s2_signal, bool s3_signal) { return 0; }
@@ -110,6 +108,22 @@ void GivenRewards_0_5_10_minus10_WhenDecideNextAction_ThenReturns_1700_1700()
     assert(action.rightWheelDirection == expectedAction.rightWheelDirection);
 }
 
+void GivenRewards_minus20_minus5_minus10_minus20_WhenDecideNextAction_ThenReturns_1300_1300()
+{
+    //Arrange
+    RewardsForActionsAfterObservingAState rewardsForActionsAfterObservingAState;
+    rewardsForActionsAfterObservingAState = { -20, -5, -10, -20 };
+
+    Action expectedAction = { 1300, 1300 };
+
+    //Act
+    Action action = DecideNextAction(rewardsForActionsAfterObservingAState);
+    
+    //Assert
+    assert(action.leftWheelDirection == expectedAction.leftWheelDirection);
+    assert(action.rightWheelDirection == expectedAction.rightWheelDirection);
+}
+
 int main()
 {
     GivenFrequenciesProvided_WhenCategoriseFrequencyTrio_ThenResultsAsExpected();
@@ -119,5 +133,6 @@ int main()
     GivenState_bbb_WhenObserveState_ThenReturnsExpectedState();
     GivenState_wbb_WhenRecallRewardsForActionsAfterObservingAState_ThenReturnsExpectedRewards();
     GivenRewards_0_5_10_minus10_WhenDecideNextAction_ThenReturns_1700_1700();
+    GivenRewards_minus20_minus5_minus10_minus20_WhenDecideNextAction_ThenReturns_1300_1300();
     std::cout<< "Seems to work"<< std::endl;
 }
