@@ -66,6 +66,8 @@ RewardsForActionsAfterObservingAState RecallRewardsForActionsAfterObservingAStat
             return memoryOfRewardsForStateActionPairs.value[i];
         }
     }
+    //This should never occur, and it might be better to have triggers for LEDs for these kinds of issues.
+    return { 0, 0, 0, 0 };
 }
 
 Action DecideNextAction(RewardsForActionsAfterObservingAState rewardsForActionsAfterObservingAState)
@@ -95,6 +97,27 @@ Action DecideNextAction(RewardsForActionsAfterObservingAState rewardsForActionsA
     return nextAction;
 }
 
+int ReverseDirection(int originalDirection)
+{
+    if (originalDirection == 1300)
+    {
+        return 1700;
+    }
+    if (originalDirection == 1700)
+    {
+        return 1300;
+    }
+    return originalDirection;
+}
+
+Action ReverseAction(Action originalAction)
+{
+    Action reversedAction;
+    reversedAction.leftWheelDirection = ReverseDirection(originalAction.leftWheelDirection);
+    reversedAction.rightWheelDirection = ReverseDirection(originalAction.rightWheelDirection);
+    return reversedAction;
+}
+
 void ReverseRecentStateActionPairsAndApplyNegativeRewards(LinkedList<StateActionPair> mostRecentStateActionPairs)
 {
     while(true)
@@ -103,9 +126,8 @@ void ReverseRecentStateActionPairsAndApplyNegativeRewards(LinkedList<StateAction
         {
             return;
         }
-        StateActionPair recentStateActionPair;
-        recentStateActionPair = mostRecentStateActionPairs.pop();
-        //ReverseAction(recentStateActionPair.Action);
+        StateActionPair recentStateActionPair = mostRecentStateActionPairs.pop();
+        Action reversedAction = ReverseAction(recentStateActionPair.action);
         //NegativeRewardForStateActionPair(recentStateActionPair);
     }
 }
