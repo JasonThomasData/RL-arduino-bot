@@ -10,6 +10,8 @@ int mockGetFrequency(SensorModel sensor, bool s2_signal, bool s3_signal) { retur
 #include "src/Agent/Rewards.h"
 #include "src/Agent/Policy.ino"
 
+#include "src/Agent/LinkedList.h"
+
 void GivenFrequenciesProvided_WhenCategoriseFrequencyTrio_ThenResultsAsExpected()
 {
     assert(CategoriseFrequencyTrio(0, 0, 0) == 'b');
@@ -124,6 +126,28 @@ void GivenRewards_minus20_minus5_minus10_minus20_WhenDecideNextAction_ThenReturn
     assert(action.rightWheelDirection == expectedAction.rightWheelDirection);
 }
 
+void GivenWheelDirection_ReturnsReversedDirection()
+{
+    assert(ReverseDirection(1300) == 1700);
+    assert(ReverseDirection(1700) == 1300);
+    assert(ReverseDirection(1500) == 1500);
+}
+
+void GivenAction_WhenReverseAction_ThenReversedActionReturned()
+{
+    //Arrange
+    Action action;
+    action.leftWheelDirection = 1300;
+    action.rightWheelDirection = 1700;
+
+    //Act
+    Action reversedAction = ReverseAction(action);
+
+    //Assert
+    assert(reversedAction.leftWheelDirection == 1700);
+    assert(reversedAction.rightWheelDirection == 1300);
+}
+
 int main()
 {
     GivenFrequenciesProvided_WhenCategoriseFrequencyTrio_ThenResultsAsExpected();
@@ -134,5 +158,7 @@ int main()
     GivenState_wbb_WhenRecallRewardsForActionsAfterObservingAState_ThenReturnsExpectedRewards();
     GivenRewards_0_5_10_minus10_WhenDecideNextAction_ThenReturns_1700_1700();
     GivenRewards_minus20_minus5_minus10_minus20_WhenDecideNextAction_ThenReturns_1300_1300();
+    GivenWheelDirection_ReturnsReversedDirection();
+    GivenAction_WhenReverseAction_ThenReversedActionReturned();
     std::cout<< "Seems to work"<< std::endl;
 }
