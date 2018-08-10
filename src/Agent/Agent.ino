@@ -28,6 +28,9 @@ SensorModel sensorLeft;
 SensorModel sensorMiddle;
 SensorModel sensorRight;
 
+ServoModel servoLeft;
+ServoModel servoRight;
+
 void setup()
 {   
     sensorLeft = { 1, 2, 3, 4, 13 };
@@ -37,6 +40,9 @@ void setup()
     ConfigureSensor(&sensorLeft);
     ConfigureSensor(&sensorMiddle);
     ConfigureSensor(&sensorRight);
+
+    servoLeft = { 16, 1000 };
+    servoRight = { 17, 1000 };
 
     mostRecentStateActionPairs = LinkedList<StateActionPair>();
 

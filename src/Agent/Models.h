@@ -14,7 +14,9 @@ struct SensorModel
 #define ServoModel_h
 struct ServoModel
 {
-    int signalPin;
-    int signalToSet;
+    int pin;
+    int moveDuration;
 };
 #endif
+
+//ARE THESE THE SAME AS ACTIONS? SHOULD THEY BE?
