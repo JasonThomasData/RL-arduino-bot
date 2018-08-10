@@ -18,5 +18,3 @@ struct ServoModel
     int moveDuration;
 };
 #endif
-
-//ARE THESE THE SAME AS ACTIONS? SHOULD THEY BE?
