@@ -3,6 +3,9 @@
 int mockGetFrequency(SensorModel sensor, bool s2_signal, bool s3_signal) { return 0; }
 #define GetFrequency mockGetFrequency
 
+void mockTurnWheel(ServoModel servo, int wheelDirection) { }
+#define TurnWheel mockTurnWheel
+
 #include <iostream>
 #define String std::string //C++ has no String type
 
@@ -148,6 +151,61 @@ void GivenAction_WhenReverseAction_ThenReversedActionReturned()
     assert(reversedAction.rightWheelDirection == 1300);
 }
 
+void GivenNothingInList_WhenSizeCalled_Returns0()
+{
+    LinkedList<int> list = LinkedList<int>();
+    assert(list.size() == 0);
+}
+
+void GivenNothingInList_WhenAddNodeAtPlace0_ReturnsTrue()
+{
+    LinkedList<int> list = LinkedList<int>();
+    assert(list.add(0, 1) == true);
+}
+
+void GivenOneNodeInList_WhenAddNodeIndexLargerThanListSize_ThenNodeAddedToEndOfList()
+{
+    //Arrange
+    LinkedList<int> list = LinkedList<int>();
+    list.add(1);
+
+    //Act
+    list.add(5, 2);
+    list.add(4, 3);
+
+    //Assert
+    assert(list.get(0) == 1);
+    assert(list.get(1) == 2);
+    assert(list.get(2) == 3);
+}
+
+void GivenNothingInList_WhenAddMinus_ReturnsFalse()
+{
+    //Arrange
+    LinkedList<int> list = LinkedList<int>();
+
+    //Act Assert
+    try {
+        list.add(-1, 1);
+    }
+    catch (std::exception& e)
+    {
+        std::cerr << "Exception catched : " << e.what() << std::endl;
+    } 
+}
+
+void GivenThreeNodesInList_WhenSizeCalled_Returns3()
+{
+    //Arrange
+    LinkedList<int> list = LinkedList<int>();
+    list.add(1);
+    list.add(2);
+    list.add(3);
+
+    //Act Assert
+    assert(list.size() == 3);
+}
+
 int main()
 {
     GivenFrequenciesProvided_WhenCategoriseFrequencyTrio_ThenResultsAsExpected();
@@ -160,5 +218,13 @@ int main()
     GivenRewards_minus20_minus5_minus10_minus20_WhenDecideNextAction_ThenReturns_1300_1300();
     GivenWheelDirection_ReturnsReversedDirection();
     GivenAction_WhenReverseAction_ThenReversedActionReturned();
+
     std::cout<< "Seems to work"<< std::endl;
+
+    GivenNothingInList_WhenSizeCalled_Returns0();
+    GivenIndexNotInList_WhenGetNode_ReturnsNullPointer();
+    GivenOneNodeInList_WhenAddNodeIndexLargerThanListSize_ThenNodeAddedToEndOfList();
+    GivenNothingInList_WhenAddNodeAtPlace0_ReturnsTrue();
+    //GivenNothingInList_WhenAddMinus_ReturnsFalse();
+    GivenThreeNodesInList_WhenSizeCalled_Returns3();
 }
