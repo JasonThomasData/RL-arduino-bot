@@ -61,7 +61,7 @@ void loop()
     bool hasObservedRed = CheckHasObservedRed(state);
     if(hasObservedRed)
     {
-        ReverseRecentStateActionPairsAndApplyNegativeRewards(mostRecentStateActionPairs);
+        ReverseRecentStateActionPairsAndApplyNegativeRewards(mostRecentStateActionPairs, servoLeft, servoRight);
     }
     else
     {

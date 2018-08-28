@@ -57,7 +57,9 @@ bool CheckHasObservedRed(State state)
     return false;
 }
 
-RewardsForActionsAfterObservingAState RecallRewardsForActionsAfterObservingAState(State state, MemoryOfRewardsForStateActionPairs memoryOfRewardsForStateActionPairs)
+RewardsForActionsAfterObservingAState RecallRewardsForActionsAfterObservingAState(
+    State state,
+    MemoryOfRewardsForStateActionPairs memoryOfRewardsForStateActionPairs)
 {
     for (int i = 0; i < 8; i++)
     {
@@ -118,7 +120,19 @@ Action ReverseAction(Action originalAction)
     return reversedAction;
 }
 
-void ReverseRecentStateActionPairsAndApplyNegativeRewards(LinkedList<StateActionPair> mostRecentStateActionPairs)
+void ApplyAction(
+    ServoModel servoLeft,
+    ServoModel servoRight,
+    Action action)
+{
+    TurnWheel(servoLeft, action.leftWheelDirection);
+    TurnWheel(servoRight, action.rightWheelDirection);
+}
+
+void ReverseRecentStateActionPairsAndApplyNegativeRewards(
+    LinkedList<StateActionPair> mostRecentStateActionPairs,
+    ServoModel servoLeft,
+    ServoModel servoRight)
 {
     while(true)
     {
@@ -128,6 +142,7 @@ void ReverseRecentStateActionPairsAndApplyNegativeRewards(LinkedList<StateAction
         }
         StateActionPair recentStateActionPair = mostRecentStateActionPairs.pop();
         Action reversedAction = ReverseAction(recentStateActionPair.action);
+        ApplyAction(servoLeft, servoRight, reversedAction);
         //NegativeRewardForStateActionPair(recentStateActionPair);
     }
 }

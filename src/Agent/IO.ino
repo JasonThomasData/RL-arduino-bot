@@ -19,11 +19,11 @@ int GetFrequency(SensorModel sensor, bool s2_signal, bool s3_signal)
     return pulseIn(sensor.outputPin, LOW);
 }
 
-void TurnWheel(ServoModel servo, int servoDirection)
+void TurnWheel(ServoModel servo, int wheelDirection)
 {
     Servo driver;
     driver.attach(servo.pin);
-    driver.write(servoDirection);
+    driver.write(wheelDirection);
     delay(servo.moveDuration);
 }
 
