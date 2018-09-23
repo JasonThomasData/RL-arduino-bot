@@ -4,6 +4,8 @@ You should download the Arduino IDE to compile the src to your board.
 
 This project uses an Arduino Nano ATMega168 board, or clone. Much of the work on this project was completed using a Mac computer, and if you're using a clone, you will need to [download drivers](https://github.com/adrianmihalko/ch340g-ch34g-ch34x-mac-os-x-driver).
 
+If using a Debian box of some kind, don't use apt to install, as [this](https://playground.arduino.cc/Linux/Debian) site warns. Download the binary from their site.
+
 The LinkedList project is in the Sketch, partiall because there is an unmerged pull request for a bug fix (fixed in this project).
 
 ### Tests
