@@ -1,5 +1,6 @@
 //The robot will live in a world where there is only white black and red.
 //The numbers are the D* numbers on the board itself. S0 is D5, etc.
+//The ratios here were set with 3.3V going to the TCS230
 
 #define S0 5
 #define S1 6
@@ -13,15 +14,15 @@ int blueFrequency = 0;
 
 String determineColour(int redFrequency, int greenFrequency, int blueFrequency)
 {
-  if (redFrequency <= 100 && greenFrequency <= 100 && blueFrequency <= 100)
+  if (redFrequency <= 120 && greenFrequency <= 120 && blueFrequency <= 120)
   {
     return "white";
   }
-  else if (redFrequency >= 400 && greenFrequency >= 400 && blueFrequency >= 400)
+  else if (redFrequency >= 600 && greenFrequency >= 600 && blueFrequency >= 500)
   {
     return "black";
   }
-  else if (redFrequency <= 150 && greenFrequency >= 200 && blueFrequency >= 200)
+  else if (redFrequency <= 180 && greenFrequency >= 300 && blueFrequency >= 200)
   {
     return "red";
   }
@@ -29,20 +30,16 @@ String determineColour(int redFrequency, int greenFrequency, int blueFrequency)
 }
 
 void setup() {
-  // Setting the outputs
   pinMode(S0, OUTPUT);
   pinMode(S1, OUTPUT);
   pinMode(S2, OUTPUT);
   pinMode(S3, OUTPUT);
   
-  // Setting the sensorOut as an input
   pinMode(sensorOut, INPUT);
   
-  // Setting frequency scaling to 20%
   digitalWrite(S0,HIGH);
   digitalWrite(S1,LOW);
   
-   // Begins serial communication 
   Serial.begin(9600);
 }
 
@@ -61,13 +58,13 @@ void loop() {
 
   String colour = determineColour(redFrequency, greenFrequency, blueFrequency);
 
-  Serial.print("R = ");
+  Serial.print(" R = ");
   Serial.print(redFrequency);
   Serial.print(" G = ");
   Serial.print(greenFrequency);
   Serial.print(" B = ");
-  Serial.println(blueFrequency);
-
+  Serial.print(blueFrequency);
+  Serial.print(" colour = ");
   Serial.println(colour);
 
   delay(100);
