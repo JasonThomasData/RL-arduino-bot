@@ -6,6 +6,7 @@ int mockGetFrequency(SensorModel sensor, bool s2_signal, bool s3_signal) { retur
 void mockTurnWheel(ServoModel servo, int wheelDirection) { }
 #define TurnWheel mockTurnWheel
 
+#include <assert.h>
 #include <iostream>
 #define String std::string //C++ has no String type
 
