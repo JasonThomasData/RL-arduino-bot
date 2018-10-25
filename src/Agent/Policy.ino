@@ -99,6 +99,16 @@ Action DecideNextAction(RewardsForActionsAfterObservingAState rewardsForActionsA
     return nextAction;
 }
 
+int DetermineNegativeReward(int recentStateActionPairsCount)
+{
+    int reward = recentStateActionPairsCount - 2;
+    if (reward < 0)
+    {
+        reward = 1;
+    }
+    return reward;
+}
+
 int ReverseDirection(int originalDirection)
 {
     if (originalDirection == 1300)
@@ -129,6 +139,8 @@ void ApplyAction(
     TurnWheel(servoRight, action.rightWheelDirection);
 }
 
+
+
 void ReverseRecentStateActionPairsAndApplyNegativeRewards(
     LinkedList<StateActionPair> mostRecentStateActionPairs,
     ServoModel servoLeft,
@@ -141,7 +153,7 @@ void ReverseRecentStateActionPairsAndApplyNegativeRewards(
         {
             return;
         }
-        int reward determineReward(recentStateActionPairsCount);
+        int negativeReward = DetermineNegativeReward(recentStateActionPairsCount);
         StateActionPair recentStateActionPair = mostRecentStateActionPairs.pop();
         Action reversedAction = ReverseAction(recentStateActionPair.action);
         ApplyAction(servoLeft, servoRight, reversedAction);

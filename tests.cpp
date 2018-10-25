@@ -152,6 +152,12 @@ void GivenAction_WhenReverseAction_ThenReversedActionReturned()
     assert(reversedAction.rightWheelDirection == 1300);
 }
 
+void GivenSizeOfRecentMovesStack_ThenReturnsExpected()
+{
+    assert(DetermineNegativeReward(0) == 1);
+    assert(DetermineNegativeReward(3) == 1);
+    assert(DetermineNegativeReward(5) == 3);
+}
 
 
 //g++ -std=c++14 tests.cpp -o tests && ./tests
@@ -407,6 +413,7 @@ int main()
     GivenRewards_minus20_minus5_minus10_minus20_WhenDecideNextAction_ThenReturns_1300_1300();
     GivenWheelDirection_ReturnsReversedDirection();
     GivenAction_WhenReverseAction_ThenReversedActionReturned();
+    GivenSizeOfRecentMovesStack_ThenReturnsExpected();
 
     std::cout<< "Seems to work"<< std::endl;
 
