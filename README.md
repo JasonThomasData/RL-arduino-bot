@@ -23,6 +23,12 @@ These parts in `3d_designs/reused_parts/` were incorporated from other projects:
     small_wheel_holder.stl -> https://github.com/davidhrbaty/ArduBot
     SG90-A5.stl -> https://www.thingiverse.com/thing:2282898
 
+### Docs
+
+There are a bunch of ideas I drew down in pics/
+
+The control flow diagram was created [here](https://www.draw.io/) and the .xml file is what that app takes for upload. 
+
 ### Reading
 
 Naming things is hard, so I've reused common names for components by reading [this](http://www-anw.cs.umass.edu/rlr/terms.html).

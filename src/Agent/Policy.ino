@@ -136,10 +136,12 @@ void ReverseRecentStateActionPairsAndApplyNegativeRewards(
 {
     while(true)
     {
-        if (mostRecentStateActionPairs.size() == 0)
+        int recentStateActionPairsCount = mostRecentStateActionPairs.size();
+        if (recentStateActionPairsCount == 0)
         {
             return;
         }
+        int reward determineReward(recentStateActionPairsCount);
         StateActionPair recentStateActionPair = mostRecentStateActionPairs.pop();
         Action reversedAction = ReverseAction(recentStateActionPair.action);
         ApplyAction(servoLeft, servoRight, reversedAction);

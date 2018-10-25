@@ -37,7 +37,7 @@ void setup() {
   
   pinMode(sensorOut, INPUT);
   
-  digitalWrite(S0,HIGH);
+  digitalWrite(S0,HIGH); //Can we do without these? This will mean a higher frequency to check. Any consequences?
   digitalWrite(S1,LOW);
   
   Serial.begin(9600);

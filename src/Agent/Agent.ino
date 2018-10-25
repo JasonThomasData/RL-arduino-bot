@@ -59,15 +59,23 @@ void loop()
 {
     State state = ObserveState(sensorLeft, sensorMiddle, sensorRight);
     bool hasObservedRed = CheckHasObservedRed(state);
+
+    //These conditions have mismatched levels of abstraction
     if(hasObservedRed)
     {
+        //New name candidate - FailStatePolicy
         ReverseRecentStateActionPairsAndApplyNegativeRewards(mostRecentStateActionPairs, servoLeft, servoRight);
     }
     else
     {
-        //mark the last move added to the move stack as positive
+        //Perhaps place this in a new function
+        //Call it - StandardPolicy, or synonym of normal
+        
+        //reward the last move added to the move stack as positive, if there exist any
+        RewardsForActionsAfterObservingAState rewardsForActionsAfterObservingAState = RecallRewardsForActionsAfterObservingAState(state, memoryOfRewardsForStateActionPairs);
+        Action nextAction = DecideNextAction(rewardsForActionsAfterObservingAState);
+        //Complete action
+        //Create a new state-action-pair
+        //Add state-action-pair to recent-memory-stack
     }
-    RewardsForActionsAfterObservingAState rewardsForActionsAfterObservingAState = RecallRewardsForActionsAfterObservingAState(state, memoryOfRewardsForStateActionPairs);
-    Action nextAction = DecideNextAction(rewardsForActionsAfterObservingAState);
 }
-
