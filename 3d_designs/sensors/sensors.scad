@@ -53,18 +53,42 @@ module sensors_mount()
         all_sensor_holders();
 }
 
-module sensor_divider()
+module sensor_wall(length)
     linear_extrude(height = 15)
     {
-        square([23.5, 2]);
+        square([length, 2]);
     }
 
-module dividers()
+module short_walls()
 {
-    translate([8,28,0])
-        sensor_divider();
-    translate([8,54,0])
-        sensor_divider();
+    translate([2,0,0])
+        sensor_wall(35);
+    translate([2,28,0])
+        sensor_wall(35);
+    translate([2,54,0])
+        sensor_wall(35);
+    translate([2,82,0])
+        sensor_wall(35);
+}
+
+module short_wall_holes()
+{
+    rotate([-90,0,0])
+        translate([6, -4, 0])
+            screw_hole(1, 84);
+    rotate([-90,0,0])
+        translate([33.5, -4, 0])
+            screw_hole(1, 84);
+}
+
+module long_walls()
+{
+      translate([2,0,0])
+        rotate([0,0,90])
+            sensor_wall(84);
+    translate([39,0,0])
+        rotate([0,0,90])
+            sensor_wall(84);
 }
 
 module chassis_connector_block()
@@ -95,6 +119,11 @@ module chassis_connectors()
 }
 
 sensors_mount();
-dividers();
+difference()
+{
+    short_walls();
+    short_wall_holes();
+}
+long_walls();
 translate([0,3,0])
     chassis_connectors();
