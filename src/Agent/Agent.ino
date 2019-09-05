@@ -64,7 +64,7 @@ void loop()
     if(hasObservedRed)
     {
         //New name candidate - FailStatePolicy
-        ReverseRecentStateActionPairsAndApplyNegativeRewards(mostRecentStateActionPairs, servoLeft, servoRight);
+        NegativePolicy(&mostRecentStateActionPairs, &memoryOfRewardsForStateActionPairs, servoLeft, servoRight);
     }
     else
     {

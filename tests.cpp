@@ -1,6 +1,6 @@
 #include "src/Agent/Models.h"
 
-int mockGetFrequency(SensorModel sensor, bool s2_signal, bool s3_signal) { return 0; }
+int mockGetFrequency(SensorModel *sensor, bool s2_signal, bool s3_signal) { return 0; }
 #define GetFrequency mockGetFrequency
 
 void mockTurnWheel(ServoModel servo, int wheelDirection) { }
@@ -51,13 +51,13 @@ void GivenAllFrequenciesAre0_WhenGetColour_ThenReturns_b()
 {
     //Relies on pulseIn mocked to return 0
     SensorModel sensor;
-    assert(GetColour(sensor) == 'b');
+    assert(GetColour(&sensor) == 'b');
 }
 
 void GivenState_bbb_WhenObserveState_ThenReturnsExpectedState()
 {
     SensorModel sensor;
-    State state = ObserveState(sensor, sensor, sensor);
+    State state = ObserveState(&sensor, &sensor, &sensor);
 
     assert(state.sensorLeft == 'b');
     assert(state.sensorMiddle == 'b');
@@ -152,11 +152,12 @@ void GivenAction_WhenReverseAction_ThenReversedActionReturned()
     assert(reversedAction.rightWheelDirection == 1300);
 }
 
-void GivenSizeOfRecentMovesStack_ThenReturnsExpected()
+void GivenSizeOfRecentMovesStack_ThenReturnsExpectedNegativeReward()
 {
-    assert(DetermineNegativeReward(0) == 1);
-    assert(DetermineNegativeReward(3) == 1);
-    assert(DetermineNegativeReward(5) == 3);
+    assert(DetermineNegativeReward(0) == -1);
+    assert(DetermineNegativeReward(1) == -1);
+    assert(DetermineNegativeReward(3) == -2);
+    assert(DetermineNegativeReward(5) == -4);
 }
 
 
@@ -413,7 +414,7 @@ int main()
     GivenRewards_minus20_minus5_minus10_minus20_WhenDecideNextAction_ThenReturns_1300_1300();
     GivenWheelDirection_ReturnsReversedDirection();
     GivenAction_WhenReverseAction_ThenReversedActionReturned();
-    GivenSizeOfRecentMovesStack_ThenReturnsExpected();
+    GivenSizeOfRecentMovesStack_ThenReturnsExpectedNegativeReward();
 
     std::cout<< "Seems to work"<< std::endl;
 

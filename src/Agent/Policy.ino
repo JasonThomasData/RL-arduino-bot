@@ -69,7 +69,7 @@ RewardsForActionsAfterObservingAState RecallRewardsForActionsAfterObservingAStat
             return memoryOfRewardsForStateActionPairs.value[i];
         }
     }
-    //This should never occur, and it might be better to have triggers for LEDs for these kinds of issues.
+    //This, below, should never occur, and it might be better to have triggers for LEDs for these kinds of issues.
     return { 0, 0, 0, 0 };
 }
 
@@ -100,12 +100,13 @@ Action DecideNextAction(RewardsForActionsAfterObservingAState rewardsForActionsA
     return nextAction;
 }
 
-int DetermineNegativeReward(int recentStateActionPairsCount)
+int DetermineNegativeReward(int stateActionPairsYetToBeRewarded)
 {
-    int reward = recentStateActionPairsCount - 2;
-    if (reward < 0)
+    int rewardBias = 1;
+    int reward = 0 - stateActionPairsYetToBeRewarded + rewardBias;
+    if (reward >= 0)
     {
-        reward = 1;
+        reward = -1;
     }
     return reward;
 }
@@ -140,24 +141,24 @@ void ApplyAction(
     TurnWheel(servoRight, action.rightWheelDirection);
 }
 
+void ApplyRewardForStateActionPair(StateActionPair recentStateActionPair, int reward)
+{
+    
+}
 
-
-void ReverseRecentStateActionPairsAndApplyNegativeRewards(
-    LinkedList<StateActionPair> mostRecentStateActionPairs,
+void NegativePolicy(
+    LinkedList<StateActionPair> *mostRecentStateActionPairs,
+    MemoryOfRewardsForStateActionPairs *memoryOfRewardsForStateActionPairs,
     ServoModel servoLeft,
     ServoModel servoRight)
 {
-    while(true)
+    int recentStateActionPairsCount = mostRecentStateActionPairs->size();
+    for (int i; i < recentStateActionPairsCount; i++)
     {
-        int recentStateActionPairsCount = mostRecentStateActionPairs.size();
-        if (recentStateActionPairsCount == 0)
-        {
-            return;
-        }
-        int negativeReward = DetermineNegativeReward(recentStateActionPairsCount);
-        StateActionPair recentStateActionPair = mostRecentStateActionPairs.pop();
+        int negativeReward = DetermineNegativeReward(mostRecentStateActionPairs->size());
+        StateActionPair recentStateActionPair = mostRecentStateActionPairs->pop();
         Action reversedAction = ReverseAction(recentStateActionPair.action);
         ApplyAction(servoLeft, servoRight, reversedAction);
-        //NegativeRewardForStateActionPair(recentStateActionPair);
+        //ApplyRewardForStateActionPair(recentStateActionPair, negativeReward);
     }
 }
