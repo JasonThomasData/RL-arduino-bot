@@ -1,44 +1,50 @@
 //The robot will live in a world where there is only white black and red.
 //The numbers are the D* numbers on the board itself. S0 is D5, etc.
-//The ratios here were set with 3.3V going to the TCS230
+//The ratios here were set with 5V going to the TCS230
+//THESE UNITS ARE UNRELIABLE AT 3.3V. USE 5V
+//THIS TEST IS FOR A SINGLE SENSOR ONLY
+//Note - not using S0 or S1 pins, because, need to use pins for servos also... not enough pins
 
-#define S0 5
-#define S1 6
+/*
+//LEFT
+#define S2 5
+#define S3 6
+#define sensorOut 7
+
+//MIDDLE
 #define S2 8
 #define S3 9
-#define sensorOut 7
+#define sensorOut 10
+*/
+
+//RIGHT
+#define S2 8
+#define S3 9
+#define sensorOut 10
 
 int redFrequency = 0;
 int greenFrequency = 0;
 int blueFrequency = 0;
 
+//Seems that Red and black have good contrast, anything not red or black can be white (AKA other)
 String determineColour(int redFrequency, int greenFrequency, int blueFrequency)
 {
-  if (redFrequency <= 120 && greenFrequency <= 120 && blueFrequency <= 120)
-  {
-    return "white";
-  }
-  else if (redFrequency >= 600 && greenFrequency >= 600 && blueFrequency >= 500)
-  {
-    return "black";
-  }
-  else if (redFrequency <= 180 && greenFrequency >= 300 && blueFrequency >= 200)
+  if (redFrequency <= 20 && (greenFrequency >= 20 || blueFrequency >= 20))
   {
     return "red";
   }
-  return "other";
+  else if (redFrequency >= 30 && (greenFrequency >= 30 || blueFrequency >= 30))
+  {
+    return "black";
+  }
+  return "white";
 }
 
 void setup() {
-  pinMode(S0, OUTPUT);
-  pinMode(S1, OUTPUT);
   pinMode(S2, OUTPUT);
   pinMode(S3, OUTPUT);
   
   pinMode(sensorOut, INPUT);
-  
-  digitalWrite(S0,HIGH); //Can we do without these? This will mean a higher frequency to check. Any consequences?
-  digitalWrite(S1,LOW);
   
   Serial.begin(9600);
 }
@@ -67,5 +73,5 @@ void loop() {
   Serial.print(" colour = ");
   Serial.println(colour);
 
-  delay(100);
+  delay(2000);
 }
