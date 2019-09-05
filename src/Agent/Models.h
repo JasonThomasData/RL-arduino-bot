@@ -2,8 +2,6 @@
 #define SensorModel_h
 struct SensorModel
 {
-    int s0Pin;
-    int s1Pin;
     int s2Pin;
     int s3Pin;
     int outputPin;

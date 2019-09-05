@@ -12,13 +12,14 @@ void ConfigureSensor(SensorModel *sensor)
     digitalWrite(sensor->s1Pin, LOW);
 }
 
-int GetFrequency(SensorModel sensor, bool s2_signal, bool s3_signal)
+int GetFrequency(SensorModel *sensor, bool s2_signal, bool s3_signal)
 {
-    digitalWrite(sensor.s2Pin, s2_signal);
-    digitalWrite(sensor.s3Pin, s3_signal);
-    return pulseIn(sensor.outputPin, LOW);
+    digitalWrite(sensor->s2Pin, s2_signal);
+    digitalWrite(sensor->s3Pin, s3_signal);
+    return pulseIn(sensor->outputPin, LOW);
 }
 
+//Need pointers here, if we intend to modify the servoModel state... using pointers might also give a perf boost
 void TurnWheel(ServoModel servo, int wheelDirection)
 {
     Servo driver;
@@ -26,4 +27,3 @@ void TurnWheel(ServoModel servo, int wheelDirection)
     driver.write(wheelDirection);
     delay(servo.moveDuration);
 }
-

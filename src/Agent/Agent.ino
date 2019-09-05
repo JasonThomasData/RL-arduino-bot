@@ -33,16 +33,16 @@ ServoModel servoRight;
 
 void setup()
 {   
-    sensorLeft = { 1, 2, 3, 4, 13 };
-    sensorMiddle = { 5, 6, 7, 8, 14};
-    sensorRight = { 9, 10, 11, 12, 15 };
+    sensorLeft = { 5, 6, 7 };
+    sensorMiddle = { 8, 9, 10};
+    sensorRight = { 11, 12, 13 };
 
     ConfigureSensor(&sensorLeft);
     ConfigureSensor(&sensorMiddle);
     ConfigureSensor(&sensorRight);
 
-    servoLeft = { 16, 1000 };
-    servoRight = { 17, 1000 };
+    servoLeft = { 16, 500 };
+    servoRight = { 17, 500 };
 
     mostRecentStateActionPairs = LinkedList<StateActionPair>();
 
@@ -57,7 +57,7 @@ void setup()
 
 void loop()
 {
-    State state = ObserveState(sensorLeft, sensorMiddle, sensorRight);
+    State state = ObserveState(&sensorLeft, &sensorMiddle, &sensorRight);
     bool hasObservedRed = CheckHasObservedRed(state);
 
     //These conditions have mismatched levels of abstraction

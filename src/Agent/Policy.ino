@@ -21,7 +21,7 @@ char CategoriseFrequencyTrio(
     return 'w';
 }
 
-char GetColour(SensorModel sensor)
+char GetColour(SensorModel *sensor)
 {
     int redFrequency = GetFrequency(sensor, false, false); //LOW, LOW
     int greenFrequency = GetFrequency(sensor, true, true); //HIGH, HIGH
@@ -30,9 +30,9 @@ char GetColour(SensorModel sensor)
 }
 
 State ObserveState(
-    SensorModel sensorLeft,
-    SensorModel sensorMiddle,
-    SensorModel sensorRight)
+    SensorModel *sensorLeft,
+    SensorModel *sensorMiddle,
+    SensorModel *sensorRight)
 {
     State state;
     state.sensorLeft = GetColour(sensorLeft);
@@ -61,7 +61,8 @@ RewardsForActionsAfterObservingAState RecallRewardsForActionsAfterObservingAStat
     State state,
     MemoryOfRewardsForStateActionPairs memoryOfRewardsForStateActionPairs)
 {
-    for (int i = 0; i < 8; i++)
+    int numberOfRewardsInMemory = 8; //memoryOfRewardsForStateActionPairs.value LENGTH
+    for (int i = 0; i < numberOfRewardsInMemory; i++)
     {
         if(memoryOfRewardsForStateActionPairs.key[i] == state.memoryKey)
         {
