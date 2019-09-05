@@ -15,6 +15,7 @@ struct Action
 {
     int leftWheelDirection;
     int rightWheelDirection;
+    char memoryKey[2];
 };
 #endif
 

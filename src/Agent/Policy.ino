@@ -57,45 +57,51 @@ bool CheckHasObservedRed(State state)
     return false;
 }
 
-RewardsForActionsAfterObservingAState RecallRewardsForActionsAfterObservingAState(
+RewardsForActions RecallRewardsForActions(
     State state,
-    MemoryOfRewardsForStateActionPairs memoryOfRewardsForStateActionPairs)
+    MemoryOfRewardsForActions *memoryOfRewardsForActions)
 {
-    int numberOfRewardsInMemory = 8; //memoryOfRewardsForStateActionPairs.value LENGTH
-    for (int i = 0; i < numberOfRewardsInMemory; i++)
+    int numberOfRewardsForStates = 8; //sizeof(memoryOfRewardsForActions->states)
+    for (int i = 0; i < numberOfRewardsForStates; i++)
     {
-        if(memoryOfRewardsForStateActionPairs.key[i] == state.memoryKey)
+        if(memoryOfRewardsForActions->states[i] == state.memoryKey)
         {
-            return memoryOfRewardsForStateActionPairs.value[i];
+            return memoryOfRewardsForActions->rewardsForActions[i];
         }
     }
-    //This, below, should never occur, and it might be better to have triggers for LEDs for these kinds of issues.
-    return { 0, 0, 0, 0 };
 }
 
-Action DecideNextAction(RewardsForActionsAfterObservingAState rewardsForActionsAfterObservingAState)
+Action DecideNextAction(RewardsForActions rewardsForActions)
 {
     Action nextAction;
     nextAction.leftWheelDirection = 1300; //AntiClockwise
     nextAction.rightWheelDirection = 1700; //Clockwise
-    int highestValue = rewardsForActionsAfterObservingAState.ff;
+    nextAction.memoryKey[0] = 'f';
+    nextAction.memoryKey[1] = 'f';
+    int highestValue = rewardsForActions.ff;
 
-    if (rewardsForActionsAfterObservingAState.fb > highestValue)
+    if (rewardsForActions.fb > highestValue)
     {
         nextAction.leftWheelDirection = 1300; //Clockwise
         nextAction.rightWheelDirection = 1300; //Clockwise
-        highestValue = rewardsForActionsAfterObservingAState.fb;
+        nextAction.memoryKey[0] = 'f';
+        nextAction.memoryKey[1] = 'b';
+        highestValue = rewardsForActions.fb;
     }
-    if (rewardsForActionsAfterObservingAState.bf > highestValue)
+    if (rewardsForActions.bf > highestValue)
     {
         nextAction.leftWheelDirection = 1700; //AntiClockwise
         nextAction.rightWheelDirection = 1700; //AntiClockwise
-        highestValue = rewardsForActionsAfterObservingAState.bf;
+        nextAction.memoryKey[0] = 'b';
+        nextAction.memoryKey[1] = 'f';
+        highestValue = rewardsForActions.bf;
     }
-    if (rewardsForActionsAfterObservingAState.bb > highestValue)
+    if (rewardsForActions.bb > highestValue)
     {
         nextAction.leftWheelDirection = 1700; //Clockwise
         nextAction.rightWheelDirection = 1300; //AntiClockwise
+        nextAction.memoryKey[0] = 'b';
+        nextAction.memoryKey[1] = 'b';
     }
     return nextAction;
 }
@@ -141,14 +147,39 @@ void ApplyAction(
     TurnWheel(servoRight, action.rightWheelDirection);
 }
 
-void ApplyRewardForStateActionPair(StateActionPair recentStateActionPair, int reward)
+void ApplyRewardForStateActionPair(
+    StateActionPair stateActionPair,
+    MemoryOfRewardsForActions *memoryOfRewardsForActions,
+    int reward)
 {
-    
+    int numberOfRewardsForStates = 8; //sizeof(memoryOfRewardsForActions->states)
+    for (int i = 0; i < numberOfRewardsForStates; i++)
+    {
+        if(memoryOfRewardsForActions->states[i] == stateActionPair.state.memoryKey)
+        {
+            if (stateActionPair.action.memoryKey == "ff")
+            {
+                memoryOfRewardsForActions->rewardsForActions->ff = memoryOfRewardsForActions->rewardsForActions->ff + reward;
+            }
+            else if (stateActionPair.action.memoryKey == "fb")
+            {
+                memoryOfRewardsForActions->rewardsForActions->fb = memoryOfRewardsForActions->rewardsForActions->fb + reward;
+            }
+            else if (stateActionPair.action.memoryKey == "bf")
+            {
+                memoryOfRewardsForActions->rewardsForActions->bf = memoryOfRewardsForActions->rewardsForActions->bf + reward;
+            }
+            else if (stateActionPair.action.memoryKey == "bb")
+            {
+                memoryOfRewardsForActions->rewardsForActions->bb = memoryOfRewardsForActions->rewardsForActions->bb + reward;
+            }
+        }
+    }
 }
 
 void NegativePolicy(
     LinkedList<StateActionPair> *mostRecentStateActionPairs,
-    MemoryOfRewardsForStateActionPairs *memoryOfRewardsForStateActionPairs,
+    MemoryOfRewardsForActions *memoryOfRewardsForActions,
     ServoModel servoLeft,
     ServoModel servoRight)
 {
@@ -159,6 +190,6 @@ void NegativePolicy(
         StateActionPair recentStateActionPair = mostRecentStateActionPairs->pop();
         Action reversedAction = ReverseAction(recentStateActionPair.action);
         ApplyAction(servoLeft, servoRight, reversedAction);
-        //ApplyRewardForStateActionPair(recentStateActionPair, negativeReward);
+        ApplyRewardForStateActionPair(recentStateActionPair, memoryOfRewardsForActions, negativeReward);
     }
 }

@@ -1,6 +1,6 @@
-#ifndef RewardsForActionsAfterObservingAState_h
-#define RewardsForActionsAfterObservingAState_h
-struct RewardsForActionsAfterObservingAState
+#ifndef RewardsForActions_h
+#define RewardsForActions_h
+struct RewardsForActions
 {
     int ff; //forward forward
     int fb;
@@ -12,11 +12,11 @@ struct RewardsForActionsAfterObservingAState
 //Including a hashmap type is too expensive, so this will have to do
 //Not sure if a linear search will be performance issue
 
-#ifndef MemoryOfRewardsForStateActionPairs_h
-#define MemoryOfRewardsForStateActionPairs_h
-struct MemoryOfRewardsForStateActionPairs
+#ifndef MemoryOfRewardsForActions_h
+#define MemoryOfRewardsForActions_h
+struct MemoryOfRewardsForActions
 {
-    String key[8];
-    RewardsForActionsAfterObservingAState value[8];
+    String states[8]; //key
+    RewardsForActions rewardsForActions[8]; //value
 };
 #endif
