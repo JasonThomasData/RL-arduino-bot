@@ -166,7 +166,8 @@ void StandardPolicy(
     ServoModel servoLeft,
     ServoModel servoRight)
 {
-    //reward the last move added to the move stack as positive, if there exist any
+    //Should we update the memory first, then move, or move first, then update memory? Any effect?
+    //reward the last move added to the move stack as positive, if there exist any.
     RewardsForActions rewardsForActions = RecallRewardsForActions(state, memoryOfRewardsForActions);
     Action nextAction = DecideNextAction(rewardsForActions);
     ApplyAction(servoLeft, servoRight, nextAction);
