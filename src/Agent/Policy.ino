@@ -34,15 +34,10 @@ State ObserveState(
     SensorModel *sensorMiddle,
     SensorModel *sensorRight)
 {
-    State state;
-    state.sensorLeft = GetColour(sensorLeft);
-    state.sensorMiddle = GetColour(sensorMiddle);
-    state.sensorRight = GetColour(sensorRight);
-
-    state.memoryKey[0] = state.sensorLeft;
-    state.memoryKey[1] = state.sensorMiddle;
-    state.memoryKey[2] = state.sensorRight;
-
+    State state = CreateState(
+        GetColour(sensorLeft),
+        GetColour(sensorMiddle),
+        GetColour(sensorRight));
     return state;
 }
 
@@ -73,35 +68,22 @@ RewardsForActions RecallRewardsForActions(
 
 Action DecideNextAction(RewardsForActions rewardsForActions)
 {
-    Action nextAction;
-    nextAction.leftWheelDirection = 1300; //AntiClockwise
-    nextAction.rightWheelDirection = 1700; //Clockwise
-    nextAction.memoryKey[0] = 'f';
-    nextAction.memoryKey[1] = 'f';
+    Action nextAction = CreateAction_Forward();
     int highestValue = rewardsForActions.ff;
 
-    if (rewardsForActions.fb > highestValue)
-    {
-        nextAction.leftWheelDirection = 1300; //Clockwise
-        nextAction.rightWheelDirection = 1300; //Clockwise
-        nextAction.memoryKey[0] = 'f';
-        nextAction.memoryKey[1] = 'b';
-        highestValue = rewardsForActions.fb;
-    }
     if (rewardsForActions.bf > highestValue)
     {
-        nextAction.leftWheelDirection = 1700; //AntiClockwise
-        nextAction.rightWheelDirection = 1700; //AntiClockwise
-        nextAction.memoryKey[0] = 'b';
-        nextAction.memoryKey[1] = 'f';
+        nextAction = CreateAction_TurnLeft();
         highestValue = rewardsForActions.bf;
+    }
+    if (rewardsForActions.fb > highestValue)
+    {
+        nextAction = CreateAction_TurnRight();
+        highestValue = rewardsForActions.fb;
     }
     if (rewardsForActions.bb > highestValue)
     {
-        nextAction.leftWheelDirection = 1700; //Clockwise
-        nextAction.rightWheelDirection = 1300; //AntiClockwise
-        nextAction.memoryKey[0] = 'b';
-        nextAction.memoryKey[1] = 'b';
+        nextAction = CreateAction_Backward();
     }
     return nextAction;
 }
@@ -115,27 +97,6 @@ int DetermineNegativeReward(int stateActionPairsYetToBeRewarded)
         reward = -1;
     }
     return reward;
-}
-
-int ReverseDirection(int originalDirection)
-{
-    if (originalDirection == 1300)
-    {
-        return 1700;
-    }
-    if (originalDirection == 1700)
-    {
-        return 1300;
-    }
-    return originalDirection;
-}
-
-Action ReverseAction(Action originalAction)
-{
-    Action reversedAction;
-    reversedAction.leftWheelDirection = ReverseDirection(originalAction.leftWheelDirection);
-    reversedAction.rightWheelDirection = ReverseDirection(originalAction.rightWheelDirection);
-    return reversedAction;
 }
 
 void ApplyAction(
@@ -159,25 +120,25 @@ void ApplyRewardForStateActionPair(
         {
             if (stateActionPair.action.memoryKey == "ff")
             {
-                memoryOfRewardsForActions->rewardsForActions->ff = memoryOfRewardsForActions->rewardsForActions->ff + reward;
-            }
-            else if (stateActionPair.action.memoryKey == "fb")
-            {
-                memoryOfRewardsForActions->rewardsForActions->fb = memoryOfRewardsForActions->rewardsForActions->fb + reward;
+                memoryOfRewardsForActions->rewardsForActions[i].ff = memoryOfRewardsForActions->rewardsForActions[i].ff + reward;
             }
             else if (stateActionPair.action.memoryKey == "bf")
             {
-                memoryOfRewardsForActions->rewardsForActions->bf = memoryOfRewardsForActions->rewardsForActions->bf + reward;
+                memoryOfRewardsForActions->rewardsForActions[i].bf = memoryOfRewardsForActions->rewardsForActions[i].bf + reward;
+            }
+            else if (stateActionPair.action.memoryKey == "fb")
+            {
+                memoryOfRewardsForActions->rewardsForActions[i].fb = memoryOfRewardsForActions->rewardsForActions[i].fb + reward;
             }
             else if (stateActionPair.action.memoryKey == "bb")
             {
-                memoryOfRewardsForActions->rewardsForActions->bb = memoryOfRewardsForActions->rewardsForActions->bb + reward;
+                memoryOfRewardsForActions->rewardsForActions->bb = memoryOfRewardsForActions->rewardsForActions[i].bb + reward;
             }
         }
     }
 }
 
-void NegativePolicy(
+void FailStatePolicy(
     LinkedList<StateActionPair> *mostRecentStateActionPairs,
     MemoryOfRewardsForActions *memoryOfRewardsForActions,
     ServoModel servoLeft,
@@ -188,8 +149,23 @@ void NegativePolicy(
     {
         int negativeReward = DetermineNegativeReward(mostRecentStateActionPairs->size());
         StateActionPair recentStateActionPair = mostRecentStateActionPairs->pop();
-        Action reversedAction = ReverseAction(recentStateActionPair.action);
+        Action reversedAction = CreateReversedAction(recentStateActionPair.action);
         ApplyAction(servoLeft, servoRight, reversedAction);
         ApplyRewardForStateActionPair(recentStateActionPair, memoryOfRewardsForActions, negativeReward);
     }
+}
+
+void StandardPolicy(
+    State state,
+    LinkedList<StateActionPair> *mostRecentStateActionPairs,
+    MemoryOfRewardsForActions *memoryOfRewardsForActions,
+    ServoModel servoLeft,
+    ServoModel servoRight)
+{
+    //reward the last move added to the move stack as positive, if there exist any
+    RewardsForActions rewardsForActions = RecallRewardsForActions(state, memoryOfRewardsForActions);
+    Action nextAction = DecideNextAction(rewardsForActions);
+    //Complete action
+    //Create a new state-action-pair
+    //Add state-action-pair to recent-memory-stack
 }

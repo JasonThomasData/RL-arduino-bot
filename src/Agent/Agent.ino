@@ -17,7 +17,7 @@ ServoModel servoRight;
 void setup()
 {   
     sensorLeft = { 5, 6, 7 };
-    sensorMiddle = { 8, 9, 10};
+    sensorMiddle = { 8, 9, 10 };
     sensorRight = { 11, 12, 13 };
 
     ConfigureSensor(&sensorLeft);
@@ -43,22 +43,12 @@ void loop()
     State state = ObserveState(&sensorLeft, &sensorMiddle, &sensorRight);
     bool hasObservedRed = CheckHasObservedRed(state);
 
-    //These conditions have mismatched levels of abstraction
     if(hasObservedRed)
     {
-        //New name candidate - FailStatePolicy
-        NegativePolicy(&mostRecentStateActionPairs, &memoryOfRewardsForActions, servoLeft, servoRight);
+        FailStatePolicy(&mostRecentStateActionPairs, &memoryOfRewardsForActions, servoLeft, servoRight);
     }
     else
     {
-        //Perhaps place this in a new function
-        //Call it - StandardPolicy, or synonym of normal
-        
-        //reward the last move added to the move stack as positive, if there exist any
-        RewardsForActions rewardsForActions = RecallRewardsForActions(state, &memoryOfRewardsForActions);
-        Action nextAction = DecideNextAction(rewardsForActions);
-        //Complete action
-        //Create a new state-action-pair
-        //Add state-action-pair to recent-memory-stack
+        StandardPolicy(state, &mostRecentStateActionPairs, &memoryOfRewardsForActions, servoLeft, servoRight);
     }
 }
