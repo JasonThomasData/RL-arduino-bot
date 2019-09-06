@@ -6,7 +6,7 @@ This project uses an Arduino Nano ATMega168 board, or clone. Much of the work on
 
 If using a Debian box of some kind, don't use apt to install the Arduino IDE, as [this](https://playground.arduino.cc/Linux/Debian) site warns. Download the binary from their site.
 
-The LinkedList project is in the Sketch, partiall because there is an unmerged pull request for a bug fix (fixed in this project).
+The LinkedList project is in the Sketch, because it is not standard and this is more reliable than Arduino package manager (not sure if it is or not). 
 
 ### Tests
 
@@ -28,6 +28,12 @@ These parts in `3d_designs/reused_parts/` were incorporated from other projects:
 There are a bunch of ideas I drew down in pics/
 
 The control flow diagram was created [here](https://www.draw.io/) and the .xml file is what that app takes for upload. 
+
+### Paths
+
+The paths for the robot to move along are in pics/paths/
+
+These are roughly sized to be printed on A4, but you might need to scale it up slightly.
 
 ### Reading
 

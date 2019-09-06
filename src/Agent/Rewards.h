@@ -10,8 +10,6 @@ struct RewardsForActions
 #endif
 
 //Including a hashmap type is too expensive, so this will have to do
-//Not sure if a linear search will be performance issue
-
 #ifndef MemoryOfRewardsForActions_h
 #define MemoryOfRewardsForActions_h
 struct MemoryOfRewardsForActions

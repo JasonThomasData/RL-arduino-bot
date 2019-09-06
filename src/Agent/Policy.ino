@@ -1,5 +1,4 @@
 #include "LinkedList.h"
-#include "Models.h"
 
 char CategoriseFrequencyTrio(
     int redFrequency,
@@ -167,5 +166,5 @@ void StandardPolicy(
     Action nextAction = DecideNextAction(rewardsForActions);
     //Complete action
     //Create a new state-action-pair
-    //Add state-action-pair to recent-memory-stack
+    //Add state-action-pair to recent-memory-stack, truncate if necessary
 }

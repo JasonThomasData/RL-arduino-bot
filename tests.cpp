@@ -11,6 +11,7 @@ void mockTurnWheel(ServoModel servo, int wheelDirection) { }
 #define String std::string //C++ has no String type
 
 #include "src/Agent/StateActionPairs.h"
+#include "src/Agent/StateActionFactory.ino"
 #include "src/Agent/Rewards.h"
 #include "src/Agent/Policy.ino"
 
@@ -67,7 +68,7 @@ void GivenState_bbb_WhenObserveState_ThenReturnsExpectedState()
     assert(state.memoryKey[2] == 'b');
 }
 
-void GivenState_wbb_WhenRecallRewardsForActionsAfterObservingAState_ThenReturnsExpectedRewards()
+void GivenState_wbb_WhenRecallRewardsForActions_ThenReturnsExpectedRewards()
 {
     //Arrange
     State state;
@@ -78,36 +79,36 @@ void GivenState_wbb_WhenRecallRewardsForActionsAfterObservingAState_ThenReturnsE
     state.memoryKey[1] = 'b';
     state.memoryKey[2] = 'b';
 
-    MemoryOfRewardsForStateActionPairs memoryOfRewardsForStateActionPairs;
-    memoryOfRewardsForStateActionPairs = {
+    MemoryOfRewardsForActions memoryOfRewardsForActions;
+    memoryOfRewardsForActions = {
         { "www", "wwb", "wbw", "wbb", "bww", "bwb", "bbw", "bbb" },
         { { 1, 2, 3, 4 }, { 0, 1, 2, 3 }, { -1, 0, 1, 2 }, { -2, -1, 0, 1 }, { -3, -2, -1, 0 }, { -4, -3, -2, -1 }, { -5, -4, -3, -2 }, { -6, -5, -4, -3 } }
     };
 
-    RewardsForActionsAfterObservingAState expectedRewardsForActionsAfterObservingAState;
-    expectedRewardsForActionsAfterObservingAState = memoryOfRewardsForStateActionPairs.value[3];
+    RewardsForActions expectedRewardsForActions;
+    expectedRewardsForActions = memoryOfRewardsForActions.rewardsForActions[3];
 
     //Act
-    RewardsForActionsAfterObservingAState rewardsForActionsAfterObservingAState;
-    rewardsForActionsAfterObservingAState = RecallRewardsForActionsAfterObservingAState(state, memoryOfRewardsForStateActionPairs);
+    RewardsForActions rewardsForActions;
+    rewardsForActions = RecallRewardsForActions(state, &memoryOfRewardsForActions);
 
     //Assert
-    assert(rewardsForActionsAfterObservingAState.ff == expectedRewardsForActionsAfterObservingAState.ff);
-    assert(rewardsForActionsAfterObservingAState.fb == expectedRewardsForActionsAfterObservingAState.fb);
-    assert(rewardsForActionsAfterObservingAState.bf == expectedRewardsForActionsAfterObservingAState.bf);
-    assert(rewardsForActionsAfterObservingAState.bb == expectedRewardsForActionsAfterObservingAState.bb);
+    assert(rewardsForActions.ff == expectedRewardsForActions.ff);
+    assert(rewardsForActions.fb == expectedRewardsForActions.fb);
+    assert(rewardsForActions.bf == expectedRewardsForActions.bf);
+    assert(rewardsForActions.bb == expectedRewardsForActions.bb);
 }
 
 void GivenRewards_0_5_10_minus10_WhenDecideNextAction_ThenReturns_1700_1700()
 {
     //Arrange
-    RewardsForActionsAfterObservingAState rewardsForActionsAfterObservingAState;
-    rewardsForActionsAfterObservingAState = { 0, -5, 10, 7 };
+    RewardsForActions rewardsForActions;
+    rewardsForActions = { 0, -5, 10, 7 };
 
     Action expectedAction = { 1700, 1700 };
 
     //Act
-    Action action = DecideNextAction(rewardsForActionsAfterObservingAState);
+    Action action = DecideNextAction(rewardsForActions);
     
     //Assert
     assert(action.leftWheelDirection == expectedAction.leftWheelDirection);
@@ -117,24 +118,17 @@ void GivenRewards_0_5_10_minus10_WhenDecideNextAction_ThenReturns_1700_1700()
 void GivenRewards_minus20_minus5_minus10_minus20_WhenDecideNextAction_ThenReturns_1300_1300()
 {
     //Arrange
-    RewardsForActionsAfterObservingAState rewardsForActionsAfterObservingAState;
-    rewardsForActionsAfterObservingAState = { -20, -5, -10, -20 };
+    RewardsForActions rewardsForActions;
+    rewardsForActions = { -20, -5, -10, -20 };
 
     Action expectedAction = { 1300, 1300 };
 
     //Act
-    Action action = DecideNextAction(rewardsForActionsAfterObservingAState);
+    Action action = DecideNextAction(rewardsForActions);
     
     //Assert
     assert(action.leftWheelDirection == expectedAction.leftWheelDirection);
     assert(action.rightWheelDirection == expectedAction.rightWheelDirection);
-}
-
-void GivenWheelDirection_ReturnsReversedDirection()
-{
-    assert(ReverseDirection(1300) == 1700);
-    assert(ReverseDirection(1700) == 1300);
-    assert(ReverseDirection(1500) == 1500);
 }
 
 void GivenAction_WhenReverseAction_ThenReversedActionReturned()
@@ -145,7 +139,7 @@ void GivenAction_WhenReverseAction_ThenReversedActionReturned()
     action.rightWheelDirection = 1700;
 
     //Act
-    Action reversedAction = ReverseAction(action);
+    Action reversedAction = CreateReversedAction(action);
 
     //Assert
     assert(reversedAction.leftWheelDirection == 1700);
@@ -409,10 +403,9 @@ int main()
     GivenState_wbw_WhenCheckHasObservedRed_ThenReturns_False();
     GivenAllFrequenciesAre0_WhenGetColour_ThenReturns_b();
     GivenState_bbb_WhenObserveState_ThenReturnsExpectedState();
-    GivenState_wbb_WhenRecallRewardsForActionsAfterObservingAState_ThenReturnsExpectedRewards();
+    GivenState_wbb_WhenRecallRewardsForActions_ThenReturnsExpectedRewards();
     GivenRewards_0_5_10_minus10_WhenDecideNextAction_ThenReturns_1700_1700();
     GivenRewards_minus20_minus5_minus10_minus20_WhenDecideNextAction_ThenReturns_1300_1300();
-    GivenWheelDirection_ReturnsReversedDirection();
     GivenAction_WhenReverseAction_ThenReversedActionReturned();
     GivenSizeOfRecentMovesStack_ThenReturnsExpectedNegativeReward();
 
