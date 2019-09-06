@@ -79,3 +79,11 @@ Action CreateReversedAction(Action originalAction)
     reversedAction.rightWheelDirection = _ReverseDirection(originalAction.rightWheelDirection);
     return reversedAction;
 }
+
+StateActionPair CreateStateActionPair(
+    State state,
+    Action action)
+{
+    StateActionPair stateActionPair = { state, action };
+    return stateActionPair;
+}
